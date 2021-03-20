@@ -14,6 +14,7 @@
 		D0685E522605F395008966E5 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0685E512605F395008966E5 /* GameViewController.swift */; };
 		D0685E552605F395008966E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0685E532605F395008966E5 /* Main.storyboard */; };
 		D0685E572605F399008966E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0685E562605F399008966E5 /* Assets.xcassets */; };
+		D0685E622605F75E008966E5 /* Skater.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0685E612605F75E008966E5 /* Skater.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		D0685E542605F395008966E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D0685E562605F399008966E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D0685E582605F399008966E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D0685E612605F75E008966E5 /* Skater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skater.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			children = (
 				D0685E492605F395008966E5 /* AppDelegate.swift */,
 				D0685E4F2605F395008966E5 /* GameScene.swift */,
+				D0685E612605F75E008966E5 /* Skater.swift */,
 				D0685E512605F395008966E5 /* GameViewController.swift */,
 				D0685E4B2605F395008966E5 /* GameScene.sks */,
 				D0685E4D2605F395008966E5 /* Actions.sks */,
@@ -142,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0685E502605F395008966E5 /* GameScene.swift in Sources */,
+				D0685E622605F75E008966E5 /* Skater.swift in Sources */,
 				D0685E522605F395008966E5 /* GameViewController.swift in Sources */,
 				D0685E4A2605F395008966E5 /* AppDelegate.swift in Sources */,
 			);
