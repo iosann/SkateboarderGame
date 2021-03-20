@@ -59,10 +59,10 @@
 			isa = PBXGroup;
 			children = (
 				D0685E492605F395008966E5 /* AppDelegate.swift */,
-				D0685E4B2605F395008966E5 /* GameScene.sks */,
-				D0685E4D2605F395008966E5 /* Actions.sks */,
 				D0685E4F2605F395008966E5 /* GameScene.swift */,
 				D0685E512605F395008966E5 /* GameViewController.swift */,
+				D0685E4B2605F395008966E5 /* GameScene.sks */,
+				D0685E4D2605F395008966E5 /* Actions.sks */,
 				D0685E532605F395008966E5 /* Main.storyboard */,
 				D0685E562605F399008966E5 /* Assets.xcassets */,
 				D0685E582605F399008966E5 /* Info.plist */,
@@ -285,6 +285,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2VAU5M9JPP;
 				INFOPLIST_FILE = SkateboarderGame/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -304,6 +305,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2VAU5M9JPP;
 				INFOPLIST_FILE = SkateboarderGame/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
