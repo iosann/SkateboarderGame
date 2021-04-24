@@ -30,6 +30,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	var scrollSpeed: CGFloat = 5
 	let gravitySpeed: CGFloat = 1.5
 	var lastUpdateTime: TimeInterval?
+	var score = 0
+	var bestScore = 0
+	var lastScoreUpdateTime: TimeInterval = 0.0
     
     override func didMove(to view: SKView) {
 		physicsWorld.gravity = CGVector(dx: 0, dy: -6)
@@ -43,6 +46,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		skater.setupPhysicsBody()
 		addChild(skater)
 
+		setupLabels()
+
 		let tap = UITapGestureRecognizer(target: self, action: #selector(tappedScreen))
 		view.addGestureRecognizer(tap)
 
@@ -50,7 +55,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
 	func resetSkater() {
-		skater.position = CGPoint(x: frame.midX/2.0, y: skater.frame.height/2.0 + 64.0)
+		skater.position = CGPoint(x: frame.midX/3.0, y: skater.frame.height/2.0 + 64.0)
 		skater.zPosition = 10
 		skater.zRotation = 0
 		skater.minimumY = skater.frame.height/2.0 + 64.0
@@ -60,6 +65,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 	func startGame() {
 		resetSkater()
+		score = 0
 		scrollSpeed = startingScrollSpeed
 		brickLevel = .low
 		lastUpdateTime = nil
@@ -71,6 +77,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
 
 	func gameOver() {
+		if score > bestScore {
+			bestScore = score
+			updateBestScoreLabelText()
+		}
 		startGame()
 	}
 
@@ -128,14 +138,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			let brickY = brickSize.height/2.0 + brickLevel.rawValue
 
 			let randomNumber = arc4random_uniform(99)
-			if randomNumber < 5 {
+			if randomNumber < 3 && score > 10 {
 				let gap = 20.0 * scrollSpeed
 				brickX += gap
 				let randomGemAmount = CGFloat(arc4random_uniform(150))
 				let gemY = brickY + skater.size.height + randomGemAmount
 				let gemX = brickX - gap/2.0
 				spawnGem(atPosition: CGPoint(x: gemX, y: gemY))
-			} else if randomNumber < 8 {
+			} else if randomNumber < 5 && score > 20 {
 				if brickLevel == .high { brickLevel = .low }
 				else if brickLevel == .low { brickLevel = .high }
 			}
@@ -165,6 +175,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 		if isOffScreen || isTippedOver { gameOver() }
 	}
+
+	func updateScore(_ currentTime: TimeInterval) {
+		let elapsedTime = currentTime - lastScoreUpdateTime
+		guard elapsedTime > 1.0 else { return }
+		score += Int(scrollSpeed)
+		lastScoreUpdateTime = currentTime
+		updateScoreLabelText()
+	}
     
     override func update(_ currentTime: TimeInterval) {
 		scrollSpeed += 0.01
@@ -180,6 +198,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		updateBricks(withScrollAmount: currentScrollAmount)
 		updateGems(withScrollAmount: currentScrollAmount)
 		updateSkater()
+		updateScore(currentTime)
     }
 
 	@objc func tappedScreen(tap: UITapGestureRecognizer) {
@@ -194,6 +213,54 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		if contact.bodyA.categoryBitMask == PhysicsCategory.skater && contact.bodyB.categoryBitMask == PhysicsCategory.gem {
 			guard let gem = contact.bodyB.node as? SKSpriteNode else { return }
 			removeGem(gem)
+			score += 50
+			updateScoreLabelText()
 		}
+	}
+
+	func setupLabels() {
+		let scoreTextLabel = SKLabelNode(text: "Score")
+		scoreTextLabel.position = CGPoint(x: 14.0, y: frame.size.height - 20.0)
+		scoreTextLabel.horizontalAlignmentMode = .left
+		scoreTextLabel.fontName = "Courier-Bold"
+		scoreTextLabel.fontSize = 14.0
+		scoreTextLabel.zPosition = 20
+		addChild(scoreTextLabel)
+
+		let scoreLabel = SKLabelNode(text: "0")
+		scoreLabel.position = CGPoint(x: 14.0, y: frame.size.height - 40.0)
+		scoreLabel.horizontalAlignmentMode = .left
+		scoreLabel.fontName = "Courier-Bold"
+		scoreLabel.fontSize = 18.0
+		scoreLabel.name = "scoreLabel"
+		scoreLabel.zPosition = 20
+		addChild(scoreLabel)
+
+		let bestScoreTextLabel = SKLabelNode(text: "Best score")
+		bestScoreTextLabel.position = CGPoint(x: frame.size.width - 14.0, y: frame.size.height - 20.0)
+		bestScoreTextLabel.horizontalAlignmentMode = .right
+		bestScoreTextLabel.fontName = "Courier-Bold"
+		bestScoreTextLabel.fontSize = 14.0
+		bestScoreTextLabel.zPosition = 20
+		addChild(bestScoreTextLabel)
+
+		let bestScoreLabel = SKLabelNode(text: "0")
+		bestScoreLabel.position = CGPoint(x: frame.size.width - 14.0, y: frame.size.height - 40.0)
+		bestScoreLabel.horizontalAlignmentMode = .right
+		bestScoreLabel.fontName = "Courier-Bold"
+		bestScoreLabel.fontSize = 18.0
+		bestScoreLabel.name = "bestScoreLabel"
+		bestScoreLabel.zPosition = 20
+		addChild(bestScoreLabel)
+	}
+
+	func updateScoreLabelText() {
+		guard let scoreLabel = childNode(withName: "scoreLabel") as? SKLabelNode else { return }
+		scoreLabel.text = String(format: "%04d", score)
+	}
+
+	func updateBestScoreLabelText() {
+		guard let bestScoreLabel = childNode(withName: "bestScoreLabel") as? SKLabelNode else { return }
+		bestScoreLabel.text = String(format: "%04d", bestScore)
 	}
 }
