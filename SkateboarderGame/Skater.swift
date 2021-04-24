@@ -22,7 +22,7 @@ class Skater: SKSpriteNode {
 			physicsBody?.angularDamping = 1
 			physicsBody?.categoryBitMask = PhysicsCategory.skater
 			physicsBody?.collisionBitMask = PhysicsCategory.brick
-			physicsBody?.contactTestBitMask = PhysicsCategory.brick
+			physicsBody?.contactTestBitMask = PhysicsCategory.brick | PhysicsCategory.gem
 		}
 	}
 }
