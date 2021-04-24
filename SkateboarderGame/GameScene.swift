@@ -15,9 +15,15 @@ struct PhysicsCategory {
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
+	enum BrickLevel: CGFloat {
+		case low = 0.0
+		case high = 100.0
+	}
+
 	let skater = Skater(imageNamed: "skater")
 	var bricks = [SKSpriteNode]()
 	var brickSize = CGSize.zero
+	var brickLevel = BrickLevel.low
 	let startingScrollSpeed: CGFloat = 5
 	var scrollSpeed: CGFloat = 5
 	let gravitySpeed: CGFloat = 1.5
@@ -53,6 +59,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	func startGame() {
 		resetSkater()
 		scrollSpeed = startingScrollSpeed
+		brickLevel = .low
 		lastUpdateTime = nil
 		for brick in bricks {
 			brick.removeFromParent()
@@ -86,9 +93,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			let newX = brick.position.x - currentScrollAmount
 			if newX < -brickSize.width {
 				brick.removeFromParent()
-				if let brickIndex = bricks.firstIndex(of: brick) {
-					bricks.remove(at: brickIndex)
-				}
+				guard let brickIndex = bricks.firstIndex(of: brick) else { return }
+				bricks.remove(at: brickIndex)
 			} else {
 				brick.position = CGPoint(x: newX, y: brick.position.y)
 				if brick.position.x > farthestRightBrickX {
@@ -99,12 +105,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 		while farthestRightBrickX < frame.width {
 			var brickX = farthestRightBrickX + brickSize.width + 1.0
-			let brickY = brickSize.height/2.0
+			let brickY = brickSize.height/2.0 + brickLevel.rawValue
 
 			let randomNumber = arc4random_uniform(99)
 			if randomNumber < 5 {
 				let gap = 20.0 * scrollSpeed
 				brickX += gap
+			} else if randomNumber < 8 {
+				if brickLevel == .high { brickLevel = .low }
+				else if brickLevel == .low { brickLevel = .high }
 			}
 
 			let newBrick = spawnBrick(atPosition: CGPoint(x: brickX, y: brickY))
@@ -126,12 +135,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
     
     override func update(_ currentTime: TimeInterval) {
+		scrollSpeed += 0.01
 		var elapsedTime: TimeInterval = 0.0
 		if let lastTimeStamp = lastUpdateTime {
 			elapsedTime = currentTime - lastTimeStamp
 		}
 		lastUpdateTime = currentTime
-
 		let expectedElapsedTime: TimeInterval = 1/60
 		let scrollAdjustment = CGFloat(elapsedTime / expectedElapsedTime)
 		let currentScrollAmount = scrollSpeed * scrollAdjustment
@@ -141,9 +150,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
 	@objc func tappedScreen(tap: UITapGestureRecognizer) {
-		if skater.isOnGroung {
-			skater.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 260))
-		}
+		guard skater.isOnGroung else { return }
+		skater.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 260))
 	}
 
 	func didBegin(_ contact: SKPhysicsContact) {
