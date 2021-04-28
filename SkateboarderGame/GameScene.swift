@@ -223,6 +223,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		if gameState == .running {
 			guard skater.isOnGroung else { return }
 			skater.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 260))
+			run(SKAction.playSoundFileNamed("jump.wav", waitForCompletion: false))
 		} else {
 			guard let menuLayer = childNode(withName: "menuLayer") as? SKSpriteNode else { return }
 			menuLayer.removeFromParent()
@@ -232,6 +233,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 	func didBegin(_ contact: SKPhysicsContact) {
 		if contact.bodyA.categoryBitMask == PhysicsCategory.skater && contact.bodyB.categoryBitMask == PhysicsCategory.brick {
+			guard let velocityY = skater.physicsBody?.velocity.dy else { return }
+			guard !skater.isOnGroung && velocityY < 100 else { return }
+			skater.createSparks()
 			skater.isOnGroung = true
 		}
 		if contact.bodyA.categoryBitMask == PhysicsCategory.skater && contact.bodyB.categoryBitMask == PhysicsCategory.gem {
@@ -239,6 +243,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			removeGem(gem)
 			score += 50
 			updateScoreLabelText()
+			run(SKAction.playSoundFileNamed("gem.wav", waitForCompletion: false))
 		}
 	}
 

@@ -25,4 +25,16 @@ class Skater: SKSpriteNode {
 			physicsBody?.contactTestBitMask = PhysicsCategory.brick | PhysicsCategory.gem
 		}
 	}
+
+	func createSparks() {
+		guard let sparksPath = Bundle.main.path(forResource: "sparks", ofType: "sks") else { return }
+		let sparksNode = NSKeyedUnarchiver.unarchiveObject(withFile: sparksPath) as! SKEmitterNode
+		sparksNode.position = CGPoint(x: 0.0, y: -50.0)
+		addChild(sparksNode)
+
+		let waitAction = SKAction.wait(forDuration: 0.5)
+		let removeAction = SKAction.removeFromParent()
+		let waitThenRemove = SKAction.sequence([waitAction, removeAction])
+		sparksNode.run(waitThenRemove)
+	}
 }

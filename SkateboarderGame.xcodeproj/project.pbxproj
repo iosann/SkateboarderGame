@@ -16,6 +16,9 @@
 		D0685E572605F399008966E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0685E562605F399008966E5 /* Assets.xcassets */; };
 		D0685E622605F75E008966E5 /* Skater.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0685E612605F75E008966E5 /* Skater.swift */; };
 		D07AD13F26346BB0004F832F /* MenuLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07AD13E26346BB0004F832F /* MenuLayer.swift */; };
+		D07AD1882639A3D9004F832F /* jump.wav in Resources */ = {isa = PBXBuildFile; fileRef = D07AD1862639A3D9004F832F /* jump.wav */; };
+		D07AD1892639A3D9004F832F /* gem.wav in Resources */ = {isa = PBXBuildFile; fileRef = D07AD1872639A3D9004F832F /* gem.wav */; };
+		D07AD18C2639ACC2004F832F /* sparks.sks in Resources */ = {isa = PBXBuildFile; fileRef = D07AD18B2639ACC1004F832F /* sparks.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +33,9 @@
 		D0685E582605F399008966E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0685E612605F75E008966E5 /* Skater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skater.swift; sourceTree = "<group>"; };
 		D07AD13E26346BB0004F832F /* MenuLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuLayer.swift; sourceTree = "<group>"; };
+		D07AD1862639A3D9004F832F /* jump.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = jump.wav; sourceTree = "<group>"; };
+		D07AD1872639A3D9004F832F /* gem.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = gem.wav; sourceTree = "<group>"; };
+		D07AD18B2639ACC1004F832F /* sparks.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = sparks.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +77,10 @@
 				D0685E4D2605F395008966E5 /* Actions.sks */,
 				D0685E532605F395008966E5 /* Main.storyboard */,
 				D0685E562605F399008966E5 /* Assets.xcassets */,
+				D07AD1872639A3D9004F832F /* gem.wav */,
+				D07AD1862639A3D9004F832F /* jump.wav */,
 				D0685E582605F399008966E5 /* Info.plist */,
+				D07AD18B2639ACC1004F832F /* sparks.sks */,
 			);
 			path = SkateboarderGame;
 			sourceTree = "<group>";
@@ -133,9 +142,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D07AD1892639A3D9004F832F /* gem.wav in Resources */,
+				D07AD1882639A3D9004F832F /* jump.wav in Resources */,
 				D0685E552605F395008966E5 /* Main.storyboard in Resources */,
 				D0685E4C2605F395008966E5 /* GameScene.sks in Resources */,
 				D0685E572605F399008966E5 /* Assets.xcassets in Resources */,
+				D07AD18C2639ACC2004F832F /* sparks.sks in Resources */,
 				D0685E4E2605F395008966E5 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
