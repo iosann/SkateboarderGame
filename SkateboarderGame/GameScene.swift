@@ -16,11 +16,16 @@ struct PhysicsCategory {
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
+	enum GameState {
+		case running, notRunning
+	}
+
 	enum BrickLevel: CGFloat {
 		case low = 0.0
 		case high = 100.0
 	}
 
+	var gameState = GameState.notRunning
 	let skater = Skater(imageNamed: "skater")
 	var bricks = [SKSpriteNode]()
 	var gems = [SKSpriteNode]()
@@ -51,19 +56,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		let tap = UITapGestureRecognizer(target: self, action: #selector(tappedScreen))
 		view.addGestureRecognizer(tap)
 
-		startGame()
+		createMenuLayer(message: "Tap to play", score: nil)
     }
 
-	func resetSkater() {
-		skater.position = CGPoint(x: frame.midX/3.0, y: skater.frame.height/2.0 + 64.0)
-		skater.zPosition = 10
-		skater.zRotation = 0
-		skater.minimumY = skater.frame.height/2.0 + 64.0
-		skater.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-		skater.physicsBody?.angularVelocity = 0
-	}
-
 	func startGame() {
+		gameState = .running
 		resetSkater()
 		score = 0
 		scrollSpeed = startingScrollSpeed
@@ -77,11 +74,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
 
 	func gameOver() {
+		gameState = .notRunning
 		if score > bestScore {
 			bestScore = score
 			updateBestScoreLabelText()
 		}
-		startGame()
+		createMenuLayer(message: "Game over!", score: score)
+	}
+
+	func createMenuLayer(message: String, score: Int?) {
+		let menuLayer = MenuLayer(color: UIColor.black.withAlphaComponent(0.4), size: frame.size)
+		menuLayer.anchorPoint = CGPoint.zero
+		menuLayer.position = CGPoint.zero
+		menuLayer.zPosition = 30
+		menuLayer.name = "menuLayer"
+		menuLayer.display(message: message, score: score)
+		addChild(menuLayer)
+	}
+
+	func resetSkater() {
+		skater.position = CGPoint(x: frame.midX/3.0, y: skater.frame.height/2.0 + 64.0)
+		skater.zPosition = 10
+		skater.zRotation = 0
+		skater.minimumY = skater.frame.height/2.0 + 64.0
+		skater.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+		skater.physicsBody?.angularVelocity = 0
 	}
 
 	func spawnBrick(atPosition position: CGPoint) -> SKSpriteNode {
@@ -185,6 +202,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
     
     override func update(_ currentTime: TimeInterval) {
+		guard gameState == .running else { return }
 		scrollSpeed += 0.01
 		var elapsedTime: TimeInterval = 0.0
 		if let lastTimeStamp = lastUpdateTime {
@@ -202,8 +220,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
 	@objc func tappedScreen(tap: UITapGestureRecognizer) {
-		guard skater.isOnGroung else { return }
-		skater.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 260))
+		if gameState == .running {
+			guard skater.isOnGroung else { return }
+			skater.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 260))
+		} else {
+			guard let menuLayer = childNode(withName: "menuLayer") as? SKSpriteNode else { return }
+			menuLayer.removeFromParent()
+			startGame()
+		}
 	}
 
 	func didBegin(_ contact: SKPhysicsContact) {
